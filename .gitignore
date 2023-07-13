@@ -1,0 +1,4 @@
+dist
+node_modules
+src/styles/fonts/*
+!src/styles/fonts/WebPlus_IBM_VGA_8x16.woff
