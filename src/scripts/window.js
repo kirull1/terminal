@@ -74,7 +74,7 @@ class MainWindow {
             charSizeWidth: this.charSizeWidth,
             charSizeHeight: this.charSizeHeight,
             splitSymbol: this.splitSymbol
-        }
+        };
     }
 }
 

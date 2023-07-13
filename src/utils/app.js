@@ -7,8 +7,8 @@ function windowResize() {
             const scale = entry.contentRect.height / defaultY;
             element.style.transform = `matrix(${scale}, 0, 0, ${scale}, 1, 1)`;
         }
-    })
-    observer.observe(document.querySelector('body'))
+    });
+    observer.observe(document.querySelector("body"));
 }
 
 function preloadAnimation() {

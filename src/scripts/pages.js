@@ -7,12 +7,13 @@ const headerData = {
     page: "ENTER PAGE",
     author: "AUTHOR <a href=\"https://kirull.ru\">KIRULL</a>",
     version: "VERSION 1.0"
-}
+};
 
 const footerData = {
     message: "PLEASE SELECT A COMMAND | USE CLICK OR TAB"
-}
+};
 
+// eslint-disable-next-line
 function menuPage(windowMain) {
 
 }
@@ -95,7 +96,7 @@ function enterPage(windowMain) {
 
     const buttonClick = (elementList) => {
         console.log(elementList);
-    }
+    };
 
     const entryButton = {
         top: 25,
@@ -138,4 +139,4 @@ function commandLinePage(windowMain) {
     windowMain.drawWindow();
 }
 
-export { commandLinePage, enterPage, table }
+export { commandLinePage, enterPage, table };

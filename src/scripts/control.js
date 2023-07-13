@@ -38,7 +38,7 @@ class Control {
 
         if (this.globalTask === "table") {
 
-            let mainWindow = document.getElementById("tableContent")
+            let mainWindow = document.getElementById("tableContent");
 
             if (symbol === this.defaultSymbol) {
                 this.#scrollWindow(mainWindow, 0);
@@ -83,7 +83,7 @@ class Control {
     #nextTab() {
         const incrementId = () => {
             this.tabSelectAction.id = (this.tabSelectAction.id + 1) % this.elementList.length;
-        }
+        };
 
         const decrementId = () => {
             if (this.tabSelectAction.id - 1 < 0) {
@@ -92,7 +92,7 @@ class Control {
             }
 
             this.tabSelectAction.id = (this.tabSelectAction.id - 1) % this.elementList.length;
-        }
+        };
 
         const tabEvent = event => {
             if (event.code === "Tab" || event.code === "ArrowDown") {
@@ -120,7 +120,7 @@ class Control {
                 this.tabSelectAction.status = false;
                 this.tabSelectAction.id = -1;
             }
-        }
+        };
 
         return tabEvent;
     }
@@ -143,13 +143,13 @@ class Control {
 
             this.tabSelectAction.id = this.elementList.findIndex((el) => el.id === id);
 
-            if (event.target.id === "button" && this.elementList[this.tabSelectAction.id].hasOwnProperty("onclick")) {
+            if (event.target.id === "button" && Object.prototype.hasOwnProperty.call(this.elementList[this.tabSelectAction.id], "onclick")) {
                 this.elementList[this.tabSelectAction.id].onclick.call(this, this.elementList);
                 return;
             }
 
             this.#putTab("*");
-        }
+        };
 
         return clickEvent;
     }
@@ -177,7 +177,7 @@ class Control {
                 currElement.options.inputText = currElement.options.inputText.slice(0, -1);
                 this.#putTextInput(currElement.options.inputText);
             }
-        }
+        };
 
         return keyboardEvent;
     }
@@ -197,7 +197,7 @@ class Control {
             if (event.keyCode == 13 && currElement.onclick) {
                 currElement.onclick.call(this, this.elementList);
             }
-        }
+        };
 
         return enterEvent;
     }

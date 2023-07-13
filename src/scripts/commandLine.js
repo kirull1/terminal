@@ -49,7 +49,7 @@ class CommandLine {
             prepareContent.push({
                 top: i + 1 + this.offsetTop,
                 left: 1 + this.offsetLeft,
-                content: setContent,
+                content: `<span class="cursor-blink">${setContent}</span>`,
             });
         }
 

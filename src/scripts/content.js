@@ -43,78 +43,79 @@ class Content {
         let onclick = object["onclick"];
         let options = {};
 
-        if (object.hasOwnProperty("inputSize") && type === "input") {
+        if (Object.prototype.hasOwnProperty.call(object, "inputSize") && type === "input") {
             contentSize += Number(object["inputSize"]);
         }
 
         for (const key in object) {
             switch (key) {
-                case "top":
-                    yPointer = Number(object[key]);
-                    break;
+            case "top":
+                yPointer = Number(object[key]);
+                break;
 
-                case "left":
-                    xPointer = Number(object[key]);
-                    break;
+            case "left":
+                xPointer = Number(object[key]);
+                break;
 
-                case "center":
-                    if (Boolean(object[key]) === false) break;
-                    xPointer = Math.floor((this.maxWidthChar - contentSize) / 2);
-                    break;
+            case "center":
+                if (Boolean(object[key]) === false) break;
+                xPointer = Math.floor((this.maxWidthChar - contentSize) / 2);
+                break;
 
-                case "content":
-                    break;
+            case "content":
+                break;
 
-                case "inputSize":
-                    break;
+            case "inputSize":
+                break;
 
-                case "inputValue":
-                    break;
+            case "inputValue":
+                break;
 
-                case "type":
-                    break;
+            case "type":
+                break;
 
-                case "onclick":
-                    break;
+            case "onclick":
+                break;
 
-                default:
-                    console.error(`Undefined Property "${key}"`);
-                    break;
+            default:
+                console.error(`Undefined Property "${key}"`);
+                break;
             }
         }
 
         switch (type) {
-            case "text":
-                break;
+        case "text":
+            break;
 
-            case "input":
-                let size = 1;
-                let inputValue = "";
+        case "input": {
+            let size = 1;
+            let inputValue = "";
 
-                contentValue = `<span id="interactive" data-content-id="${id}">` + contentValue;
+            contentValue = `<span id="interactive" data-content-id="${id}">` + contentValue;
 
-                if (object.hasOwnProperty("inputSize")) {
-                    size = object["inputSize"];
-                }
+            if (Object.prototype.hasOwnProperty.call(object, "inputSize")) {
+                size = object["inputSize"];
+            }
 
-                if (object.hasOwnProperty("inputValue")) {
-                    inputValue = object["inputValue"];
-                }
+            if (Object.prototype.hasOwnProperty.call(object, "inputValue")) {
+                inputValue = object["inputValue"];
+            }
 
-                contentValue += `<span id="input-element">${inputValue.padEnd(size, "_")}</span>`;
-                contentValue += "</span>";
+            contentValue += `<span id="input-element">${inputValue.padEnd(size, "_")}</span>`;
+            contentValue += "</span>";
 
-                options = { inputSize: size, inputText: inputValue };
+            options = { inputSize: size, inputText: inputValue };
 
-                break;
+            break;
+        }
 
-            case "button":
-                contentValue = `<span id="button" data-content-id="${id}">` + contentValue + "</span>";
-                break;
+        case "button":
+            contentValue = `<span id="button" data-content-id="${id}">` + contentValue + "</span>";
+            break;
 
-            default:
-                console.error(`Undefined type "${type}"`);
-                break;
+        default:
+            console.error(`Undefined type "${type}"`);
+            break;
         }
 
         this.#addElementList({
