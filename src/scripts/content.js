@@ -18,8 +18,21 @@ class Content {
         this.elementList.push(action);
     }
 
+    #clearElementList() {
+        this.elementList = [];
+    }
+
+    #setLastId(id) {
+        this.lastId = id;
+    }
+
     #getNewId() {
         return this.lastId++;
+    }
+
+    #clearState() {
+        this.#clearElementList();
+        this.#setLastId(0);
     }
 
     #putindex(string, posX, posY) {
@@ -171,6 +184,42 @@ class Content {
         this.#putContent();
 
         return this.windowContent;
+    }
+
+    editLineById(lineContent, lineId, offset = true) {
+        let offsetStart = 1, offsetEnd = 1;
+
+        if (offset === false) {
+            offsetStart = 0;
+            offsetEnd = 0;
+        }
+
+        const editLine = document.querySelector(`[data-line="${lineId}"]`);
+        const editLineContent = editLine.innerHTML;
+
+        let resultLine = "";
+        resultLine += editLineContent.slice(0, offsetStart);
+        resultLine += lineContent;
+
+        if (offsetEnd > 0) {
+            resultLine += editLineContent.slice(offsetEnd * -1);
+        }
+        
+        editLine.innerHTML = resultLine;
+    }
+
+    dynamicPutContent(content, lineStart, lineEnd, clearOldState = false) {
+        if (clearOldState === true) {
+            this.#clearState();
+        }
+
+        this.drawContent(content);
+
+        for (let i = lineStart; i <= lineEnd; i++) {
+            this.editLineById(this.windowContent[i], i, false);
+        }
+
+        return true;
     }
 
     createDocumentElement(name, className = "", styles = {}, parent = "body") {
