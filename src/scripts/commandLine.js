@@ -23,6 +23,10 @@ class CommandLine {
         clearWindow(this.windowContent, this.defaultSymbol);
     }
 
+    consoleEffect() {
+
+    }
+
     setContent(content) {
         const currContent = content.slice(this.offsetContent);
         const contentArray = [];
@@ -49,7 +53,7 @@ class CommandLine {
             prepareContent.push({
                 top: i + 1 + this.offsetTop,
                 left: 1 + this.offsetLeft,
-                content: `<span class="cursor-blink">${setContent}</span>`,
+                content: `<span class="typing-effect">${setContent}</span>`,
             });
         }
 

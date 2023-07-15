@@ -15,7 +15,7 @@ function isMobileUserAgent() {
 }
 
 function isMobileSize() {
-    return ( ( window.innerWidth <= 800 ) && ( window.innerHeight <= 600 ) );
+    return ( ( window.innerWidth <= 720 ) && ( window.innerHeight <= 600 ) );
 }
 
 function isMobile() {

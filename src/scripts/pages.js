@@ -130,13 +130,13 @@ function commandLinePage(windowMain) {
         "test"
     ];
 
+    windowMain.drawWindow();
+
     const prepareContent = commandLine.setContent(contentArray);
 
-    console.log(prepareContent);
+    contentEdit.dynamicPutContent(prepareContent, 1, 10, true);
 
-    contentEdit.drawContent(prepareContent);
-
-    windowMain.drawWindow();
+    commandLine.consoleEffect();
 }
 
 export { commandLinePage, enterPage, table };

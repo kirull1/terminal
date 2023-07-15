@@ -1,6 +1,21 @@
 @import url("./define.css");
 @import url("./animation.css");
 
+.mobile {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    line-height: 36px;
+    padding: 30vh 20px;
+    box-sizing: border-box;
+}
+
 .defaultWindow,
 #error {
     overflow: hidden;
