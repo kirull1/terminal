@@ -18,21 +18,41 @@
 
             <div class="status-light led-red"></div>
 
-            <div class="container">
+            <div id="main-element">
+                <div class="container">
 
-                <main class="screen">
-                    <!-- CODE IS GENERATED HERE -->
-                </main>
+                    <main class="screen">
+                        <!-- CODE IS GENERATED HERE -->
+                    </main>
 
-                <div id="error" style="display: none;">
-                    <!-- ERROR CODE IS GENERATED HERE -->
+                    <div id="error" style="display: none;">
+                        <!-- ERROR CODE IS GENERATED HERE -->
+                    </div>
+
+                    <div class="scanline"></div>
+
                 </div>
 
-                <div class="scanline"></div>
+                <div style="display: none;" id="control">
+                    <button id="close-fullscreen">
+                        <img src="./img/exit_fullscreen.svg" alt="fullscreen">
+                        <span>CLOSE FULLSCREEN</span>
+                    </button>
 
+                    <button id="on-control">
+                        <img src="./img/on.png" alt="fullscreen">
+                        <span>ON</span>
+                    </button>
+                </div>
             </div>
+
         </div>
     </div>
+
+    <button id="go-fullscreen">
+        <img src="./img/fullscreen.svg" alt="fullscreen">
+        <span>GO FULLSCREEN</span>
+    </button>
 
 </body>
 

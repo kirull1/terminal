@@ -225,12 +225,12 @@
     border: none;
 }
 
-#switch~.container>.screen {
+#switch~#main-element>.container>.screen {
     animation: turn-off 0.55s cubic-bezier(0.23, 1, 0.32, 1);
     animation-fill-mode: forwards;
 }
 
-#switch:checked~.container>.screen {
+#switch:checked~#main-element>.container>.screen {
     animation: turn-on 4s linear;
     animation-fill-mode: forwards;
 }
@@ -263,7 +263,7 @@
     pointer-events: none;
 }
 
-#switch:checked~.container .overlay {
+#switch:checked~#main-element>.container .overlay {
     animation: overlay-anim 5s linear;
     animation-fill-mode: forwards;
 }

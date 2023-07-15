@@ -2,6 +2,7 @@ import { commandLinePage } from "./scripts/pages.js";
 import MainWindow from "./scripts/window.js";
 import { windowResize, preloadAnimation } from "./utils/app.js";
 import { buttonChange } from "./effect/button.js";
+import fullscreen from "./effect/fullscreen.js";
 
 import "./styles/main.css";
 import "./styles/crt.css";
@@ -21,3 +22,4 @@ init();
 windowResize();
 preloadAnimation();
 buttonChange();
+fullscreen();
