@@ -54,6 +54,7 @@ class Content {
 
         let type = object["type"] || "text";
         let onclick = object["onclick"];
+        let onsubmit = object["onsubmit"];
         let options = {};
 
         if (Object.prototype.hasOwnProperty.call(object, "inputSize") && type === "input") {
@@ -88,6 +89,9 @@ class Content {
                 break;
 
             case "onclick":
+                break;
+                      
+            case "onsubmit":
                 break;
 
             default:
@@ -138,7 +142,8 @@ class Content {
             y: yPointer,
             type: type,
             onclick: onclick,
-            options: options
+            onsubmit: onsubmit,
+            options: options,
         });
 
         this.#putindex("*" + String(id), yPointer, xPointer);

@@ -1,3 +1,4 @@
+import { isFunction } from "../utils/common.js";
 import { replaceCharacter } from "./utils.js";
 
 class Control {
@@ -12,6 +13,8 @@ class Control {
         this.charHeight = windowSetting.charSizeHeight;
 
         this.globalTask = globalTask;
+
+        this.selectedElement = true;
     }
 
     #scrollWindow(selectWindow, scrollCount, activeElement) {
@@ -34,6 +37,10 @@ class Control {
     #putTab(symbol = this.defaultSymbol) {
         if (this.tabSelectAction.id < 0) return;
 
+        if (this.selectedElement === false) {
+            symbol = this.defaultSymbol;
+        }
+        
         let element = this.elementList[this.tabSelectAction.id];
 
         if (this.globalTask === "table") {
@@ -166,7 +173,11 @@ class Control {
                 return;
             }
 
-            if (event.keyCode >= 48 && event.keyCode <= 90) {
+            if (isFunction(currElement.onsubmit) && event.keyCode === 13) {
+                currElement.onsubmit.apply(currElement);
+            }
+
+            if ((event.keyCode >= 48 && event.keyCode <= 90) || event.keyCode === 32) {
                 let letter = event.key.toUpperCase();
                 currElement.options.inputText = ((currElement.options.inputText || "") + letter).substring(0, currElement.options.inputSize);
 
@@ -200,6 +211,17 @@ class Control {
         };
 
         return enterEvent;
+    }
+
+    setDefaultElement(id) {
+        const currId = this.elementList.findIndex(element => element.id === id);
+        
+        if (currId === -1) {
+            throw new Error(`Failed to select item by given id. Item with id ${id} not found.`);
+        }
+
+        this.tabSelectAction.status = true;
+        this.tabSelectAction.id = currId;
     }
 
     activateControl() {
