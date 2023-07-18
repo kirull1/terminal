@@ -88,7 +88,7 @@ class Control {
     #putTextInput(string = "") {
         let element = this.elementList[this.tabSelectAction.id];
         const selectInput = document.querySelector(`[data-content-id="${element.id}"]`).querySelector("#input-element");
-        selectInput.innerHTML = string.padEnd(element.options.inputSize, "_");
+        selectInput.innerHTML = string.padEnd(element.options.inputSize, "_").replace(/ /g, this.defaultSymbol);
     }
 
     #nextTab() {
@@ -181,7 +181,9 @@ class Control {
                 currElement.onsubmit.apply({...currElement, clearInput: this.#clearCurrInput, target: this});
             }
 
-            if ((event.keyCode >= 48 && event.keyCode <= 90) || event.keyCode === 32) {
+            const allowCharacterCode = [32, 189];
+            
+            if ((event.keyCode >= 65 && event.keyCode <= 90) || (event.key >= 0 && event.key <= 9) || allowCharacterCode.includes(event.keyCode)) {
                 let letter = event.key.toUpperCase();
                 currElement.options.inputText = ((currElement.options.inputText || "") + letter).substring(0, currElement.options.inputSize);
 
