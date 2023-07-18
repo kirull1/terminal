@@ -2,8 +2,9 @@ import { clearWindow } from "../utils/common";
 
 class CommandLine {
 
-    constructor(windowSetting, contentEdit) {
+    constructor(windowSetting, contentEdit, consoleCommands) {
         this.contentEdit = contentEdit;
+        this.runCommand = consoleCommands.runCommand.bind(consoleCommands);
 
         this.windowContent = windowSetting.window;
         this.maxWidthChar = windowSetting.maxWidthChar;
@@ -88,18 +89,15 @@ class CommandLine {
         clearWindow(this.windowContent, this.defaultSymbol);
     }
 
-    consoleEffect() {
-
-    }
-
     sendEvent() {
         const eventHistory = this.history;
+        const runCommand = this.runCommand;
         const eventSetContent = this.#setContent.bind(this);
 
         return function () {
             const value = this.options.inputText;
             this.clearInput.apply(this.target);
-            eventHistory.push(value);
+            eventHistory.push(runCommand(value));
             eventSetContent(1);
         };
     }
