@@ -25,9 +25,21 @@ class ConsoleCommands {
         return true;
     }
 
+    setCommands(commands = []) {
+        if (commands.length === 0) {
+            throw new Error("Array of commands cannot be empty!");
+        }
+
+        for (let i = 0; i < commands.length; i++) {
+            this.setCommand(...commands[i]);
+        }
+
+        return true;
+    }
+
     runCommand(command) {
         if (command === undefined || command.length === 0) {
-            throw new Error("Command cannot be empty!");
+            return "command cannot be empty";
         }
 
         const splitCommand = command.split(" ");
