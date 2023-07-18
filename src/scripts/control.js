@@ -1,5 +1,4 @@
-import { isFunction } from "../utils/common.js";
-import { replaceCharacter } from "./utils.js";
+import { isFunction, replaceCharacter } from "../utils/common.js";
 
 class Control {
 
@@ -79,6 +78,11 @@ class Control {
         const selectLine = document.querySelector(`[data-line="${element.y}"]`);
 
         selectLine.innerHTML = replaceCharacter(selectLine.innerHTML, element.x - 1, symbol, 1);
+    }
+
+    #clearCurrInput() {
+        this.elementList[this.tabSelectAction.id].options.inputText = "";
+        return this.#putTextInput;
     }
 
     #putTextInput(string = "") {
@@ -174,7 +178,7 @@ class Control {
             }
 
             if (isFunction(currElement.onsubmit) && event.keyCode === 13) {
-                currElement.onsubmit.apply(currElement);
+                currElement.onsubmit.apply({...currElement, clearInput: this.#clearCurrInput, target: this});
             }
 
             if ((event.keyCode >= 48 && event.keyCode <= 90) || event.keyCode === 32) {

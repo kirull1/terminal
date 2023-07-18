@@ -15,7 +15,7 @@ function replaceCharacter(string, index, replacement, replacementLength) {
 }
 
 function removeHTML(string) {
-    return string.replace(/<\/?[^>]+(>|$)/g, "");
+    return string.replace(/<\/?[^>]+(>|$)/g, "").replaceAll("&lt;", "<").replaceAll("&gt;", ">");
 }
 
 function clearWindow(window, symbol) {

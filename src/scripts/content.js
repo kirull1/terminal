@@ -1,4 +1,4 @@
-import { removeHTML, replaceCharacter } from "./utils.js";
+import { removeHTML, replaceCharacter } from "../utils/common";
 
 class Content {
 
@@ -11,6 +11,7 @@ class Content {
         this.splitSymbol = windowSetting.splitSymbol;
 
         this.lastId = 0;
+        this.lastIndex = 0;
         this.elementList = [];
     }
 
@@ -26,13 +27,34 @@ class Content {
         this.lastId = id;
     }
 
+    #setLastIndex(id) {
+        this.lastIndex = id;
+    }
+
     #getNewId() {
         return this.lastId++;
+    }
+
+    #getNewIndex() {
+        return this.lastIndex++;
+    }
+
+    #clearWindowContent() {
+        for (let i = 0; i < this.windowContent.length; i++) {
+            let newContent = "";
+
+            newContent += this.windowContent[i].slice(0, 1);
+            newContent += this.defaultSymbol.repeat(this.maxWidthChar);
+            newContent += this.windowContent[i].slice(-1);
+
+            this.windowContent[i] = newContent;
+        }
     }
 
     #clearState() {
         this.#clearElementList();
         this.#setLastId(0);
+        this.#setLastIndex(0);
     }
 
     #putindex(string, posX, posY) {
@@ -44,7 +66,8 @@ class Content {
             throw new Error("Property \"content\" is not specified! The property is required");
         }
 
-        let id = this.#getNewId();
+        let id = object["id"] || this.#getNewId();
+        let index = this.#getNewIndex();
 
         let yPointer = 0;
         let xPointer = 0;
@@ -77,6 +100,9 @@ class Content {
                 break;
 
             case "content":
+                break;
+
+            case "id":
                 break;
 
             case "inputSize":
@@ -146,7 +172,7 @@ class Content {
             options: options,
         });
 
-        this.#putindex("*" + String(id), yPointer, xPointer);
+        this.#putindex("*" + String(index), yPointer, xPointer);
     }
 
     #putContent() {
@@ -164,7 +190,7 @@ class Content {
                         elEnd = j;
                     } else {
                         let elId = Number(this.windowContent[i].substring(elStart, elEnd + 1));
-                        let len = removeHTML(this.elementList[elId].content).length + 1;
+                        let len = removeHTML(this.elementList[elId].content).length + String(elId).length + 2;
                         this.windowContent[i] = replaceCharacter(this.windowContent[i], elStart - 1, this.elementList[elId].content, len);
                         this.elementList[elId].x = elStart - 1;
 
@@ -216,6 +242,7 @@ class Content {
     dynamicPutContent(content, lineStart, lineEnd, clearOldState = false) {
         if (clearOldState === true) {
             this.#clearState();
+            this.#clearWindowContent();
         }
 
         this.drawContent(content);

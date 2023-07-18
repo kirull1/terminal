@@ -1,8 +1,10 @@
-import { clearWindow } from "./utils";
+import { clearWindow } from "../utils/common";
 
 class CommandLine {
 
-    constructor(windowSetting) {
+    constructor(windowSetting, contentEdit) {
+        this.contentEdit = contentEdit;
+
         this.windowContent = windowSetting.window;
         this.maxWidthChar = windowSetting.maxWidthChar;
         this.maxHeightChar = windowSetting.maxHeightChar;
@@ -10,6 +12,9 @@ class CommandLine {
         this.defaultSymbol = windowSetting.backgroundChar;
         this.splitSymbol = windowSetting.splitSymbol;
 
+        this.heightOffset = 2;
+
+        this.maxHeight = this.maxHeightChar - this.heightOffset;
         this.offsetContent = 0;
 
         this.offsetTop = 0;
@@ -17,17 +22,12 @@ class CommandLine {
         this.offsetRight = 0;
 
         this.trimmedContent = true;
+
+        this.history = [];
+        this.inputElement = {};
     }
 
-    start() {
-        clearWindow(this.windowContent, this.defaultSymbol);
-    }
-
-    consoleEffect() {
-
-    }
-
-    setContent(content) {
+    #clearContent(content) {
         const currContent = content.slice(this.offsetContent);
         const contentArray = [];
 
@@ -41,23 +41,73 @@ class CommandLine {
             }
         }
 
+        return contentArray;
+    }
+
+    #setContent(contentOffset = 0) {
+        if (this.inputElement === undefined) {
+            throw new Error("Input must be specified.");
+        }
+        
+        const contentArray = this.#clearContent(this.history);
+
         const prepareContent = [];
 
-        for (let i = 0; i < contentArray.length; i++) {
-            let setContent = contentArray[i];
+        let index = 0;
+
+        // maximum number of lines (minus 1 for input)
+        const maxIndex = Math.min(contentArray.length, this.maxHeight - 1);
+        
+        const showContent = contentArray.slice(maxIndex * -1);
+        
+        for (; index < maxIndex; index++) {
+            let setContent = showContent[index];
 
             if (this.trimmedContent === true) {
-                setContent = contentArray[i].trim();
+                setContent = setContent.trim();
             }
 
             prepareContent.push({
-                top: i + 1 + this.offsetTop,
-                left: 1 + this.offsetLeft,
-                content: `<span class="typing-effect">${setContent}</span>`,
+                top: index + 1 + this.offsetTop,
+                left: contentOffset + this.offsetLeft,
+                content: `<span>${setContent.toUpperCase()}</span>`,
             });
         }
 
-        return prepareContent;
+        prepareContent.push({
+            top: maxIndex + 1 + this.offsetTop,
+            left: contentOffset + this.offsetLeft,
+            type: "input",
+            ...this.inputElement
+        });
+        
+        this.contentEdit.dynamicPutContent(prepareContent, 1, maxIndex + this.heightOffset - 1, true);
+    }
+
+    start() {
+        clearWindow(this.windowContent, this.defaultSymbol);
+    }
+
+    consoleEffect() {
+
+    }
+
+    sendEvent() {
+        const eventHistory = this.history;
+        const eventSetContent = this.#setContent.bind(this);
+
+        return function () {
+            const value = this.options.inputText;
+            this.clearInput.apply(this.target);
+            eventHistory.push(value);
+            eventSetContent(1);
+        };
+    }
+
+    init(content, inputElement) {
+        this.history.push(...content);
+        this.inputElement = inputElement;
+        return this.#setContent(1);
     }
 
 }
