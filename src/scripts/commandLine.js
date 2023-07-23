@@ -26,6 +26,7 @@ class CommandLine {
 
         this.history = [];
         this.inputElement = {};
+        this._moveHistory = 0;
     }
 
     #clearContent(content) {
@@ -45,7 +46,7 @@ class CommandLine {
         return contentArray;
     }
 
-    #setContent(contentOffset = 0) {
+    #setContent(contentOffset = 1) {
         if (this.inputElement === undefined) {
             throw new Error("Input must be specified.");
         }
@@ -58,8 +59,19 @@ class CommandLine {
 
         // maximum number of lines (minus 1 for input)
         const maxIndex = Math.min(contentArray.length, this.maxHeight - 1);
+
+        let contentSlice = contentArray.length - maxIndex;
+
+        if (contentArray.length > this.maxHeight) {
+            contentSlice -= this._moveHistory;
         
-        const showContent = contentArray.slice(maxIndex * -1);
+            if (contentSlice < 0) {
+                contentSlice = 0;
+                this._moveHistory -= 1;
+            }
+        }
+
+        const showContent = contentArray.slice(contentSlice);
         
         for (; index < maxIndex; index++) {
             let setContent = showContent[index];
@@ -85,6 +97,26 @@ class CommandLine {
         this.contentEdit.dynamicPutContent(prepareContent, 1, maxIndex + this.heightOffset - 1, true);
     }
 
+    #movementEvent(event) {
+        if (![38, 40].includes(event.keyCode)) {
+            return;
+        }
+
+        if (event.keyCode === 38) {
+            this._moveHistory += 1;
+        }
+
+        if (event.keyCode === 40) {
+            this._moveHistory = Math.max(this._moveHistory - 1, 0);
+        }
+
+        this.#setContent();
+    }
+
+    #movement() {
+        document.addEventListener("keydown", this.#movementEvent.bind(this));
+    }
+
     start() {
         clearWindow(this.windowContent, this.defaultSymbol);
     }
@@ -92,20 +124,23 @@ class CommandLine {
     sendEvent() {
         const eventHistory = this.history;
         const runCommand = this.runCommand;
+        const resetMove = () => this._moveHistory = 0;
         const eventSetContent = this.#setContent.bind(this);
 
         return function () {
             const value = this.options.inputText;
             this.clearInput.apply(this.target);
             eventHistory.push(runCommand(value));
-            eventSetContent(1);
+            resetMove();
+            eventSetContent();
         };
     }
 
     init(content, inputElement) {
         this.history.push(...content);
         this.inputElement = inputElement;
-        return this.#setContent(1);
+        this.#movement();
+        return this.#setContent();
     }
 
 }
