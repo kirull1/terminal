@@ -25,21 +25,33 @@ class CommandLine {
         this.trimmedContent = true;
 
         this.history = [];
+        this.commandHistory = [];
         this.inputElement = {};
         this._moveHistory = 0;
     }
 
     #clearContent(content) {
         const currContent = content.slice(this.offsetContent);
-        const contentArray = [];
+        const contentLines = [];
 
         for (let i = 0; i < currContent.length; i++) {
-            if (currContent[i].length > this.maxWidthChar) {
-                for (let j = 0; j < currContent[i].length; j += this.maxWidthChar - this.offsetLeft - 2 - this.offsetRight) {
-                    contentArray.push(currContent[i].slice(j, j + this.maxWidthChar - this.offsetLeft - 2 - this.offsetRight));
+            if (currContent[i].includes("\n")) {
+                contentLines.push(...currContent[i].split("\n"));
+                continue;
+            }
+
+            contentLines.push(currContent[i]);
+        }
+
+        const contentArray = [];
+
+        for (let i = 0; i < contentLines.length; i++) {
+            if (contentLines[i].length > this.maxWidthChar) {
+                for (let j = 0; j < contentLines[i].length; j += this.maxWidthChar - this.offsetLeft - 2 - this.offsetRight) {
+                    contentArray.push(contentLines[i].slice(j, j + this.maxWidthChar - this.offsetLeft - 2 - this.offsetRight));
                 }
             } else {
-                contentArray.push(currContent[i]);
+                contentArray.push(contentLines[i]);
             }
         }
 
@@ -77,7 +89,7 @@ class CommandLine {
             let setContent = showContent[index];
 
             if (this.trimmedContent === true) {
-                setContent = setContent.trim();
+                setContent = setContent.replace(/\s+$/, "");
             }
 
             prepareContent.push({
