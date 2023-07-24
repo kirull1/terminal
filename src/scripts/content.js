@@ -1,4 +1,4 @@
-import { removeHTML, replaceCharacter } from "../utils/common";
+import { removeHTML, removeSpecial, replaceCharacter } from "../utils/common";
 
 class Content {
 
@@ -72,7 +72,7 @@ class Content {
         let yPointer = 0;
         let xPointer = 0;
 
-        let contentValue = object["content"];
+        let contentValue = object["content"].replaceAll(" ", this.defaultSymbol);
         let contentSize = contentValue.length;
 
         let type = object["type"] || "text";
@@ -191,7 +191,7 @@ class Content {
                     } else {
                         let elId = Number(this.windowContent[i].substring(elStart, elEnd + 1));
                         let len = removeHTML(this.elementList[elId].content).length + String(elId).length + 2;
-                        this.windowContent[i] = replaceCharacter(this.windowContent[i], elStart - 1, this.elementList[elId].content, len);
+                        this.windowContent[i] = removeSpecial(replaceCharacter(this.windowContent[i], elStart - 1, this.elementList[elId].content, len));
                         this.elementList[elId].x = elStart - 1;
 
                         elStart = 0;
