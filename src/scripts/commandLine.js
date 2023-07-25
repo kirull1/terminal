@@ -129,6 +129,10 @@ class CommandLine {
         document.addEventListener("keydown", this.#movementEvent.bind(this));
     }
 
+    forceUpdate() {
+        this.contentEdit.dynamicPutContent([], 1, this.maxHeight, true);
+    }
+
     start() {
         clearWindow(this.windowContent, this.defaultSymbol);
     }
@@ -138,11 +142,18 @@ class CommandLine {
         const runCommand = this.runCommand;
         const resetMove = () => this._moveHistory = 0;
         const eventSetContent = this.#setContent.bind(this);
+        const commandLineContext = this;
 
         return function () {
             const value = this.options.inputText;
             this.clearInput.apply(this.target);
-            eventHistory.push(runCommand(value));
+
+            const commandOutput = runCommand(value, commandLineContext);
+
+            if (commandOutput !== undefined) {
+                eventHistory.push(commandOutput);
+            }
+
             resetMove();
             eventSetContent();
         };

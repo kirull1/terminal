@@ -37,7 +37,7 @@ class ConsoleCommands {
         return true;
     }
 
-    runCommand(command) {
+    runCommand(command, context = null) {
         if (command === undefined || command.length === 0) {
             return "command cannot be empty";
         }
@@ -54,7 +54,7 @@ class ConsoleCommands {
             }
 
             if (isFunction(currCommand)) {
-                return currCommand.apply({command: splitCommand, target: this});
+                return currCommand.apply({command: splitCommand, context: context, target: this});
             }
 
         }
