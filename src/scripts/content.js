@@ -44,7 +44,7 @@ class Content {
             let newContent = "";
 
             newContent += this.windowContent[i].slice(0, 1);
-            newContent += this.defaultSymbol.repeat(this.maxWidthChar);
+            newContent += this.defaultSymbol.repeat(this.maxWidthChar - 2);
             newContent += this.windowContent[i].slice(-1);
 
             this.windowContent[i] = newContent;
@@ -190,7 +190,9 @@ class Content {
                         elEnd = j;
                     } else {
                         let elId = Number(this.windowContent[i].substring(elStart, elEnd + 1));
-                        let len = removeHTML(this.elementList[elId].content).length + String(elId).length + 2;
+                        let elIdLength = String(elId).length + 1;
+                        let len = removeHTML(this.elementList[elId].content).length;
+                        this.windowContent[i] = replaceCharacter(this.windowContent[i], elStart - 1, this.defaultSymbol, elIdLength);
                         this.windowContent[i] = removeSpecial(replaceCharacter(this.windowContent[i], elStart - 1, this.elementList[elId].content, len));
                         this.elementList[elId].x = elStart - 1;
 

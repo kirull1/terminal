@@ -13,8 +13,8 @@ function replaceCharacter(string, index, replacement, replacementLength) {
 
     return (
         string.slice(0, index) +
-      replacement +
-      string.slice(index + replacementLength)
+        replacement +
+        string.slice(index + replacementLength)
     );
 }
 
