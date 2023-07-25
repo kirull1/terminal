@@ -13,6 +13,13 @@ function echo() {
     return message.join(" ");
 }
 
+// CLEAR commands
+function clear() {
+    this.context.history.splice(0, this.context.history.length);
+    this.context._moveHistory = 0;
+    this.context.forceUpdate.call(this.context);
+}
+
 // COWSAY commands
 function cowsay() {
     const message = this.command.slice(1);
@@ -51,12 +58,14 @@ function cowsay() {
  */
 
 const echo_command = ["echo", echo];
+const claer_command = ["clear", clear];
 const cowsay_command = ["cowsay", cowsay];
 
 // Result array of commands:
 const arrayOfCommands = [
     echo_command,
-    cowsay_command
+    cowsay_command,
+    claer_command
 ];
 
 export default arrayOfCommands;
