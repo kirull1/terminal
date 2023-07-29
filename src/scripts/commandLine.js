@@ -27,7 +27,10 @@ class CommandLine {
         this.history = [];
         this.commandHistory = [];
         this.inputElement = {};
+        
         this._moveHistory = 0;
+        this._moveCommandHistory = 0;
+        this._currentCommand = null;
     }
 
     #clearContent(content) {
@@ -109,24 +112,62 @@ class CommandLine {
         this.contentEdit.dynamicPutContent(prepareContent, 1, maxIndex + this.heightOffset - 1, true);
     }
 
-    #movementEvent(event) {
-        if (![38, 40].includes(event.keyCode)) {
+    #putValueInputLine(value) {
+        const currentInput = this.controlCtx.elementList.find(element => element.type === "input" && element.id === this.inputElement.id);
+        currentInput.options.inputText = value;
+    }
+
+    #movementEvent(event) {        
+        if (![33, 34].includes(event.keyCode)) {
             return;
         }
 
-        if (event.keyCode === 38) {
+        if (event.keyCode === 33) {
             this._moveHistory += 1;
         }
 
-        if (event.keyCode === 40) {
+        if (event.keyCode === 34) {
             this._moveHistory = Math.max(this._moveHistory - 1, 0);
         }
 
         this.#setContent();
     }
 
+    #movementCommandHistory(event) {         
+        if (![38, 40].includes(event.keyCode)) {
+            return;
+        }
+
+        const currentInput = this.controlCtx.elementList.find(element => element.type === "input" && element.id === this.inputElement.id);
+
+        if (this._currentCommand === null) {
+            this._currentCommand = currentInput.options.inputText || "";
+        }
+
+        if (event.keyCode === 38 && this._moveCommandHistory < this.commandHistory.length) {
+            this._moveCommandHistory += 1;
+        }
+
+        if (event.keyCode === 40) {
+            this._moveCommandHistory = Math.max(this._moveCommandHistory - 1, 0);
+        }
+
+        let currentValue = "";
+
+        if (this._moveCommandHistory > 0) {
+            currentValue = this.commandHistory[this.commandHistory.length - this._moveCommandHistory];
+        } else if (this._moveCommandHistory === 0) {
+            currentValue = this._currentCommand || "";
+        }
+
+        this.inputElement.inputValue = currentValue;
+        this.#setContent();
+        this.#putValueInputLine(currentValue);
+    }
+
     #movement() {
         document.addEventListener("keydown", this.#movementEvent.bind(this));
+        document.addEventListener("keydown", this.#movementCommandHistory.bind(this));
     }
 
     forceUpdate() {
@@ -139,8 +180,16 @@ class CommandLine {
 
     sendEvent() {
         const eventHistory = this.history;
+        const commandHistory = this.commandHistory;
         const runCommand = this.runCommand;
-        const resetMove = () => this._moveHistory = 0;
+        
+        const reset = () => {
+            this._moveHistory = 0;
+            this.inputElement.inputValue = "";
+            this._currentCommand = null;
+            this._moveCommandHistory = 0;
+        };
+
         const eventSetContent = this.#setContent.bind(this);
         const commandLineContext = this;
 
@@ -148,15 +197,27 @@ class CommandLine {
             const value = this.options.inputText;
             this.clearInput.apply(this.target);
 
+            if (commandHistory.includes(value)) {
+                commandHistory.splice(commandHistory.indexOf(value), 1);
+            }
+
+            commandHistory.push(value);
+
             const commandOutput = runCommand(value, commandLineContext);
 
             if (commandOutput !== undefined) {
                 eventHistory.push(commandOutput);
             }
 
-            resetMove();
+            this.clearInput.call(this.target);
+
+            reset();
             eventSetContent();
         };
+    }
+
+    setControlCtx(controlCtx) {
+        this.controlCtx = controlCtx;
     }
 
     init(content, inputElement) {
