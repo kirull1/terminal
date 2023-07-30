@@ -1,3 +1,5 @@
+import arrayOfCommands from "../define/commands.js";
+import ConsoleCommands from "../effect/consoleCommands.js";
 import CommandLine from "./commandLine.js";
 import Content from "./content.js";
 import Control from "./control.js";
@@ -119,24 +121,34 @@ function enterPage(windowMain) {
 
 function commandLinePage(windowMain) {
     const contentEdit = new Content(windowMain.setting);
-    const commandLine = new CommandLine(windowMain.setting);
+    const consoleCommands = new ConsoleCommands();
+    consoleCommands.setCommands(arrayOfCommands);
+    const commandLine = new CommandLine(windowMain.setting, contentEdit, consoleCommands);
 
     commandLine.offsetLeft = 1;
     commandLine.offsetRight = 1;
 
     let contentArray = [
-        "Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! Hello World! ",
-        "123",
-        "test"
+        "test",
     ];
+
+    const inputElement = {
+        content: ">",
+        inputSize: 95,
+        inputValue: "",
+        id: 1,
+        onsubmit: commandLine.sendEvent(),
+    };
 
     windowMain.drawWindow();
 
-    const prepareContent = commandLine.setContent(contentArray);
+    commandLine.init(contentArray, inputElement);
 
-    contentEdit.dynamicPutContent(prepareContent, 1, 10, true);
-
-    commandLine.consoleEffect();
+    const control = new Control(windowMain.setting, contentEdit.elementList);
+    control.selectedElement = false;
+    control.setDefaultElement(contentEdit.elementList.find(element => element.type === "input").id);
+    control.activateControl();
+    commandLine.setControlCtx(control);
 }
 
 export { commandLinePage, enterPage, table };
